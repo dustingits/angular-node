@@ -22,8 +22,8 @@ function installPM2() {
 // transfers local project to the remote server
 function transferProjectToRemote(failed, successful) {
   return ssh.putDirectory(
-    '../hackathon-starter',
-    '/home/ubuntu/hackathon-starter-temp',
+    '../angular-node',
+    '/home/ubuntu/angular-node-temp',
     {
       recursive: true,
       concurrency: 1,
@@ -49,7 +49,7 @@ function transferProjectToRemote(failed, successful) {
 // creates a temporary folder on the remote server
 function createRemoteTempFolder() {
   return ssh.execCommand(
-    'rm -rf hackathon-starter-temp && mkdir hackathon-starter-temp', {
+    'rm -rf angular-node-temp && mkdir angular-node-temp', {
       cwd: '/home/ubuntu'
   });
 }
@@ -65,7 +65,7 @@ function stopRemoteServices() {
 // updates the project source on the server
 function updateRemoteApp() {
   return ssh.execCommand(
-    'mkdir hackathon-starter && cp -r hackathon-starter-temp/* hackathon-starter/ && rm -rf hackathon-starter-temp', {
+    'mkdir angular-node && cp -r angular-node-temp/* angular-node/ && rm -rf angular-node-temp', {
       cwd: '/home/ubuntu'
   });
 }
@@ -73,7 +73,7 @@ function updateRemoteApp() {
 // restart mongodb and node services on the remote server
 function restartRemoteServices() {
   return ssh.execCommand(
-    'cd hackathon-starter && sudo service mongod start && pm2 start app.js', {
+    'cd angular-node && sudo service mongod start && pm2 start app.js', {
       cwd: '/home/ubuntu'
   });
 }
@@ -85,9 +85,9 @@ function sshConnect() {
   ssh
     .connect({
       // TODO: ADD YOUR IP ADDRESS BELOW (e.g. '12.34.5.67')
-      host: '00.00.00.00',
+      host: '18.191.151.88',
       username: 'ubuntu',
-      privateKey: 'hs-key.pem'
+      privateKey: '../hs-key.pem'
     })
     .then(function() {
       console.log('SSH Connection established.');
@@ -95,7 +95,7 @@ function sshConnect() {
       return installPM2();
     })
     .then(function() {
-      console.log('Creating `hackathon-starter-temp` folder.');
+      console.log('Creating `angular-node-temp` folder.');
       return createRemoteTempFolder();
     })
     .then(function(result) {
